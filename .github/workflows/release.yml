@@ -1,57 +1,60 @@
 name: Release
 
 on:
-    push:
-        tags:
-            - "v[0-9]+.[0-9]+.[0-9]+"
-            - "[0-9]+.[0-9]+.[0-9]+"
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
-    release:
-        strategy:
-            matrix:
-                include:
-                    - os: ubuntu-latest
-                      artifact_name: ${{ github.event.repository.name }}
-                      exe_extension: ""
-                    - os: macos-latest
-                      artifact_name: ${{ github.event.repository.name }}
-                      exe_extension: ""
-                    - os: windows-latest
-                      artifact_name: ${{ github.event.repository.name }}
-                      exe_extension: ".exe"
-        runs-on: ${{ matrix.os }}
+  release:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            binary_suffix: ""
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            binary_suffix: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary_suffix: ".exe"
+    runs-on: ${{ matrix.os }}
 
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-            - name: Cache Cargo Registry
-              uses: actions/cache@v4
-              with:
-                path: |
-                  ~/.cargo/registry
-                  ~/.cargo/git
-                  target/release
-                key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
 
-            - name: Build
-              run: cargo build --release
+      - name: Cache Cargo Registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/release
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
-            - name: Asset name
-              id: asset_name
-              run: |
-                  echo "HOST_TRIPLE=$(rustc -vV | awk '/^host/ { print $2 }')" >> $GITHUB_OUTPUT
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
 
-            - name: Rename binary for Windows
-              if: matrix.os == 'windows-latest'
-              run: |
-                  mv target/release/${{ matrix.artifact_name }} target/release/${{ matrix.artifact_name }}${{ matrix.exe_extension }}
+      - name: Prepare Binary
+        run: |
+          binary_name="switch_gcp_env"
+          version="${GITHUB_REF#refs/tags/}"
+          artifact_name="${binary_name}-${version}-${{ matrix.target }}${{ matrix.binary_suffix }}"
+          mv "target/${{ matrix.target }}/release/${binary_name}${{ matrix.binary_suffix }}" "$artifact_name"
+          echo "ARTIFACT_NAME=$artifact_name" >> $GITHUB_ENV
 
-            - name: Upload binaries to release
-              uses: svenstaro/upload-release-action@v2
-              with:
-                  repo_token: ${{ secrets.GITHUB_TOKEN }}
-                  file: target/release/${{ matrix.artifact_name }}${{ matrix.exe_extension }}
-                  asset_name: ${{ github.event.repository.name }}-${{ steps.asset_name.outputs.HOST_TRIPLE }}${{ matrix.exe_extension }}
-                  tag: ${{ github.ref }}
+      - name: Upload Binary to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ env.ARTIFACT_NAME }}
+          asset_name: ${{ env.ARTIFACT_NAME }}
+          tag: ${{ github.ref }}
