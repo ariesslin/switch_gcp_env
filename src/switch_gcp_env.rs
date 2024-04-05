@@ -41,32 +41,29 @@ mod tests {
     };
 
     #[test]
-    fn test_switch_gcp_env_success() {
+    fn test_switch_gcp_env_generic_project_id() {
         clear_command_history();
 
         let runner = MockCommandRunner;
-        let project_id = "s-dataservices-qa";
+        let project_id = "custom-gcp-project-id";
         switch_gcp_env(&runner, project_id).expect("Expected switch_gcp_env to succeed");
 
         let history = get_command_history();
         assert_eq!(history.len(), 3, "Expected three commands to be run");
 
-        assert_eq!(
-            history[0],
-            vec!["config", "set", "project", "s-dataservices-qa"]
-        );
+        assert_eq!(history[0], vec!["config", "set", "project", project_id]);
         assert_eq!(
             history[1],
             vec![
                 "auth",
                 "application-default",
                 "set-quota-project",
-                "s-dataservices-qa"
+                project_id
             ]
         );
         assert!(history[2].contains(&"container".to_string()));
         assert!(history[2].contains(&"clusters".to_string()));
         assert!(history[2].contains(&"get-credentials".to_string()));
-        assert!(history[2].contains(&"dataservices-qa".to_string()));
+        assert!(history[2].contains(&project_id.to_string()));
     }
 }
