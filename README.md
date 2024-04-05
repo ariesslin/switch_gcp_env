@@ -58,10 +58,19 @@ Move-Item -Path .\switch_gcp_env.exe -Destination C:\Windows\System32
 ```
 
 ### From Cargo
+To install `switch_gcp_env` directly from the repository, use the following command:
 ```bash
 cargo install --git https://github.com/ariesslin/switch_gcp_env
 ```
+**Note**: If you encounter issues with repository authentication during installation, you may need to configure Cargo to use the Git executable for fetching dependencies. This leverages Git's authentication mechanisms, which can be particularly helpful if you've configured SSH keys for GitHub. To do this, add the following to your `~/.cargo/config.toml` file:
+
+```toml
+# Cargo Configuration
+[net]
+git-fetch-with-cli = true
+```
+For more information on this configuration, see [Cargo's documentation](https://docs.rs/cargo/0.59.0/cargo/) and the [Shipyard guide on `git-fetch-with-cli`](https://docs.shipyard.rs/configuration/git-fetch-with-cli.html).
 
 ## Reference
-For insights into deploying Rust applications across platforms using GitHub Actions, see:
-- [Deploy Rust cross-platform with GitHub Actions](https://dzfrias.dev/blog/deploy-rust-cross-platform-github-actions/)
+- For insights into deploying Rust applications across platforms using GitHub Actions, see: [Deploy Rust cross-platform with GitHub Actions](https://dzfrias.dev/blog/deploy-rust-cross-platform-github-actions/).
+- For more details on `cargo install --git`, refer to the [official Cargo documentation](https://doc.rust-lang.org/cargo/commands/cargo-install.html).
