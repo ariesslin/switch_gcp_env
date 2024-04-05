@@ -42,7 +42,7 @@ curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/swit
 
 **macOS (Apple Silicon):**
 ```bash
-curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/switch_gcp_env-aarch64-apple-darwin > switch_gcp_env && \
+curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/switch_gcp_env-0.0.1-aarch64-apple-darwin > switch_gcp_env && \
     chmod +x switch_gcp_env && \
     sudo mv switch_gcp_env /usr/local/bin/switch_gcp_env
 ```
