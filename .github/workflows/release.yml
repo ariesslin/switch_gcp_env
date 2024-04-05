@@ -51,8 +51,18 @@ jobs:
           binary_name="switch_gcp_env"
           version="${GITHUB_REF#refs/tags/}"
           artifact_name="${binary_name}-${version}-${{ matrix.target }}${{ matrix.binary_suffix }}"
-          mv "target/${{ matrix.target }}/release/${binary_name}${{ matrix.binary_suffix }}" "$artifact_name"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            binary_path="target/${{ matrix.target }}/release/${binary_name}${{ matrix.binary_suffix }}"
+          else
+            binary_path="target/${{ matrix.target }}/release/${binary_name}"
+          fi
+          if [ ! -f "$binary_path" ]; then
+            echo "$binary_path does not exist."
+            exit 1
+          fi
+          mv "$binary_path" "$artifact_name"
           echo "ARTIFACT_NAME=$artifact_name" >> $GITHUB_ENV
+        shell: bash
 
       - name: Upload Binary to Release
         uses: svenstaro/upload-release-action@v2
