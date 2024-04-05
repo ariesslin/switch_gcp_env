@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.81"
+clap = "4.5.4"
 lazy_static = "1.4.0"
