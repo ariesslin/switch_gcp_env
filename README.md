@@ -32,13 +32,22 @@ curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/swit
     sudo mv switch_gcp_env /usr/local/bin/switch_gcp_env
 ```
 
-**macOS:**
+**macOS (Intel):**
 ```bash
 curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/switch_gcp_env-0.0.1-x86_64-apple-darwin
  > switch_gcp_env && \
     chmod +x switch_gcp_env && \
     sudo mv switch_gcp_env /usr/local/bin/switch_gcp_env
 ```
+
+**macOS (Apple Silicon):**
+```bash
+curl -L https://github.com/ariesslin/switch_gcp_env/releases/download/0.0.1/switch_gcp_env-aarch64-apple-darwin > switch_gcp_env && \
+    chmod +x switch_gcp_env && \
+    sudo mv switch_gcp_env /usr/local/bin/switch_gcp_env
+```
+
+
 
 **Windows:**
 

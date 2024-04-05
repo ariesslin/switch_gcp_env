@@ -20,6 +20,9 @@ jobs:
           - os: macos-latest
             target: x86_64-apple-darwin
             binary_suffix: ""
+          - os: macos-latest
+            target: aarch64-apple-darwin  # Apple Silicon target
+            binary_suffix: ""
           - os: windows-latest
             target: x86_64-pc-windows-msvc
             binary_suffix: ".exe"
@@ -51,11 +54,7 @@ jobs:
           binary_name="switch_gcp_env"
           version="${GITHUB_REF#refs/tags/}"
           artifact_name="${binary_name}-${version}-${{ matrix.target }}${{ matrix.binary_suffix }}"
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            binary_path="target/${{ matrix.target }}/release/${binary_name}${{ matrix.binary_suffix }}"
-          else
-            binary_path="target/${{ matrix.target }}/release/${binary_name}"
-          fi
+          binary_path="target/${{ matrix.target }}/release/${binary_name}${{ matrix.binary_suffix }}"
           if [ ! -f "$binary_path" ]; then
             echo "$binary_path does not exist."
             exit 1
