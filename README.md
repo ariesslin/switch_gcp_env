@@ -21,6 +21,8 @@ The `switch` command facilitates the transition between different GCP projects b
 
 These commands ensure that your GCP and Kubernetes configurations are aligned with the selected environment, making it easier to manage resources and deployments across different projects.
 
+![How to use switch_gcp_env](static/how-to.gif)
+
 ## Installation
 
 ### From Binaries
@@ -69,7 +71,7 @@ cargo install --git https://github.com/ariesslin/switch_gcp_env
 [net]
 git-fetch-with-cli = true
 ```
-For more information on this configuration, see [Cargo's documentation](https://docs.rs/cargo/0.59.0/cargo/) and the [Shipyard guide on `git-fetch-with-cli`](https://docs.shipyard.rs/configuration/git-fetch-with-cli.html).
+For more information on this configuration, see this [Shipyard guide on `git-fetch-with-cli`](https://docs.shipyard.rs/configuration/git-fetch-with-cli.html).
 
 ## Reference
 - For insights into deploying Rust applications across platforms using GitHub Actions, see: [Deploy Rust cross-platform with GitHub Actions](https://dzfrias.dev/blog/deploy-rust-cross-platform-github-actions/).
