@@ -9,7 +9,9 @@ pub fn switch_gcp_env<R: CommandRunner>(
 ) -> Result<()> {
     let default_zone = "europe-west8";
     // Default cluster_name for internal workaround, modify as necessary:)
-    let default_cluster_name = if project_id.ends_with("qa") {
+    let default_cluster_name = if project_id.ends_with("preprod") {
+        "ds-preprod"
+    } else if project_id.ends_with("qa") {
         "dataservices-qa"
     } else {
         "dataservices-dev"
